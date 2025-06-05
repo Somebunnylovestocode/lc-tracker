@@ -1,0 +1,14 @@
+#leetcode-widget {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  background: #1a1a1a;
+  color: #00ffcc;
+  font-size: 14px;
+  padding: 10px;
+  border-radius: 12px;
+  box-shadow: 0 0 8px rgba(0, 255, 204, 0.5);
+  font-family: monospace;
+  z-index: 999999;
+}
+
