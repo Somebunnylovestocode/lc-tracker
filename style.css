@@ -10,5 +10,25 @@
   box-shadow: 0 0 8px rgba(0, 255, 204, 0.5);
   font-family: monospace;
   z-index: 999999;
+  cursor: pointer;
+  max-width: 240px;
+}
+
+#leetcode-widget.minimized {
+  width: 35px;
+  height: 35px;
+  overflow: hidden;
+  padding: 0;
+  text-align: center;
+  line-height: 35px;
+  font-size: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+#leetcode-widget.minimized::after {
+  content: '⚡';
+  display: block;
+  color: #00ffcc;
 }
 

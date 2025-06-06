@@ -3,17 +3,24 @@ const usernames = [
   "anonymusic",
   "zendovo",
   "sansi03",
-  "yeah_right"
+  "yeah_right",
+  "f20220590",
+  "user2802i"
 ];
 
 const multiplier = 4;
 
-// STEP 1: Inject widget container
+// Create and inject widget
 const widget = document.createElement("div");
 widget.id = "leetcode-widget";
 document.body.appendChild(widget);
 
-// STEP 2: Fetch and display data
+// Toggle minimize on click
+widget.addEventListener("click", () => {
+  widget.classList.toggle("minimized");
+});
+
+// Fetch today's solved count for a user
 async function fetchTodaySolvedCount(username) {
   const url = "https://leetcode.com/graphql";
   const query = {
@@ -51,21 +58,20 @@ async function fetchTodaySolvedCount(username) {
   }
 }
 
-async function refreshData() {
-  const results = await Promise.all(usernames.map(fetchTodaySolvedCount));
-  renderWidget(results);
-  startClock(); // start only after render
-}
-
-// STEP 3: Render widget
+// Render widget content
 function renderWidget(userCounts) {
-  const now = new Date().toLocaleTimeString();
-  let html = `<div id="leetcode-clock">🕒 ${now}</div><br>`;
+  if (widget.classList.contains("minimized")) return;
 
-  for (const { username, solvedToday } of userCounts) {
+  const now = new Date().toLocaleTimeString();
+  let html = `<div id="leetcode-clock">🕒 ${now}</div><hr style="border: 0.5px solid #00ffcc">`;
+
+  // Sort leaderboard by solvedToday descending
+  const sorted = [...userCounts].sort((a, b) => b.solvedToday - a.solvedToday);
+
+  for (const { username, solvedToday } of sorted) {
     if (username === "noob_ace") {
       const goal = solvedToday * multiplier;
-      html += `✅ ${username}: ${solvedToday}<br>🎯 Your goal: ${goal}<br><br>`;
+      html += `<b>👑 ${username}</b>: ${solvedToday} <br>🎯 Your goal: ${goal}<br><br>`;
     } else {
       html += `✅ ${username}: ${solvedToday}<br>`;
     }
@@ -74,14 +80,22 @@ function renderWidget(userCounts) {
   widget.innerHTML = html;
 }
 
-// STEP 4: Update time every 30 seconds
+// Update time every 30 seconds
 function startClock() {
   setInterval(() => {
+    if (widget.classList.contains("minimized")) return;
     const clock = document.getElementById("leetcode-clock");
     if (clock) {
       clock.textContent = `🕒 ${new Date().toLocaleTimeString()}`;
     }
   }, 1000 * 30);
+}
+
+// Refresh leaderboard
+async function refreshData() {
+  const results = await Promise.all(usernames.map(fetchTodaySolvedCount));
+  renderWidget(results);
+  startClock();
 }
 
 // START
